@@ -7,7 +7,6 @@ import com.example.onedaycar.entity.User;
 import com.example.onedaycar.exception.BadRequestException;
 import com.example.onedaycar.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

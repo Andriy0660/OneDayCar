@@ -26,10 +26,14 @@ public class Booking {
     @JoinColumn(name = "renter_id")
     private User renter;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
     @Column(insertable = false, updatable = false, name = "renter_id")
     private Long renterId;
 
-    @Column(name = "owner_id")
+    @Column(insertable = false, updatable = false, name = "owner_id")
     private Long ownerId;
 
     @Column(name = "start_date")

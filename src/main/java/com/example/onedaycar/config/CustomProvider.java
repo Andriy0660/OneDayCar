@@ -1,6 +1,7 @@
 package com.example.onedaycar.config;
 
 import com.example.onedaycar.entity.User;
+import com.example.onedaycar.exception.BadRequestException;
 import com.example.onedaycar.exception.UnauthorizedException;
 import com.example.onedaycar.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,10 @@ public class CustomProvider implements AuthenticationProvider {
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
         User user;
-        try{
+        try {
             user = userService.findByEmail(username);
-        } catch (Exception e){
-            throw new UnauthorizedException("Invalid email!");
-
+        } catch (BadRequestException e) {
+            throw new UnauthorizedException("Username or password is wrong");
         }
 
         if (passwordEncoder.matches(password, user.getPassword())) {

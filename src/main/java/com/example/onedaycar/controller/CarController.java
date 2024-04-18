@@ -1,6 +1,7 @@
 package com.example.onedaycar.controller;
 
 import com.example.onedaycar.dto.request.AddCarRequest;
+import com.example.onedaycar.dto.request.GetCarsRequest;
 import com.example.onedaycar.dto.response.CarsResponse;
 import com.example.onedaycar.entity.Car;
 import com.example.onedaycar.entity.User;
@@ -11,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/car")
@@ -38,16 +37,11 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.CREATED.value()).build();
     }
 
-    // TODO pagination
-    @GetMapping("/available")
-    public ResponseEntity<CarsResponse> getAvailableCars(
-            @RequestParam(name = "startDate") LocalDate startDate,
-            @RequestParam(name = "endDate") LocalDate endDate,
-            @RequestParam(name = "location") String location) {
+    @PostMapping("/available")
+    public ResponseEntity<CarsResponse> getAvailableCars(@RequestBody @Valid GetCarsRequest request) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(
-                carService.getAllAvailableCars(user.getId(), startDate, endDate, location));
+        return ResponseEntity.ok(carService.getAllAvailableCars(user.getId(), request));
     }
 
     @GetMapping("/owned")
@@ -56,7 +50,6 @@ public class CarController {
         return ResponseEntity.ok(carService.getAllOwnedCars(user.getId()));
     }
 
-    // лише до своїх машин
     @PatchMapping
     public ResponseEntity<Void> setEnableCar(@RequestParam(name = "id") Long id,
                                              @RequestParam(name = "enable") Boolean enable) {

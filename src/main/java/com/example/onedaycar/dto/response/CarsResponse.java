@@ -6,8 +6,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class CarsResponse {
     private List<CarResponse> cars;
+    private Integer countOfPages;
 
     @Data
     @Builder

@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class BookingsResponse {
-    private List<BookingResponse> allBookings;
+    private List<BookingResponse> bookings;
 
     @Data
     @Builder
@@ -20,8 +20,11 @@ public class BookingsResponse {
         private Long id;
         private String firstName;
         private String lastName;
+        private String email;
+        private String phone;
         private String vendor;
         private String model;
+        private Double fullPrice;
         private LocalDate startDate;
         private LocalDate endDate;
         private String status;

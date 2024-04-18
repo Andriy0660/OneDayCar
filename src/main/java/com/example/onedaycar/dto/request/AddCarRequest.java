@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Range;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCarRequest { // TODO filtering
+public class AddCarRequest {
     @NotBlank
     private String vendor;
 

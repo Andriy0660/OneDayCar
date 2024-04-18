@@ -1,5 +1,6 @@
 package com.example.onedaycar.service;
 
+import com.example.onedaycar.dto.request.GetCarsRequest;
 import com.example.onedaycar.dto.response.CarsResponse;
 import com.example.onedaycar.entity.Booking;
 import com.example.onedaycar.entity.Car;
@@ -7,10 +8,10 @@ import com.example.onedaycar.exception.BadRequestException;
 import com.example.onedaycar.repository.CarRepository;
 import com.example.onedaycar.util.Status;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,16 +30,23 @@ public class CarService {
         carRepository.save(car);
     }
 
-    public CarsResponse getAllAvailableCars(Long userId,
-                                                 LocalDate startDate, LocalDate endDate,
-                                                 String location) {
+    public CarsResponse getAllAvailableCars(Long userId, GetCarsRequest r) {
 
-        List<Car> availableCars = carRepository.findAllByIsDisabledFalseAndLocationIs(location).stream()
+        List<Car> availableCars = carRepository.
+                findCarsByCriteriaAndLocationAndIsNotDisabled(
+                        r.getVendor(),
+                        r.getCarType(),
+                        r.getMaxPrice(),
+                        r.getLocation())
+                .stream()
                 .filter(c -> !Objects.equals(c.getOwner().getId(), userId) &&
-                        isCarAvailable(c, startDate, endDate))
+                        isCarAvailable(c, r.getStartDate(), r.getEndDate()))
                 .toList();
 
-        return new CarsResponse(availableCars.stream()
+        int totalPages = getTotalPages(availableCars, r.getPageSize());
+        List<Car> pagedCars = getPage(availableCars, r.getPage(), r.getPageSize());
+
+        return CarsResponse.builder().countOfPages(totalPages).cars(pagedCars.stream()
                 .map(c -> CarsResponse.CarResponse.builder()
                         .id(c.getId())
                         .ownerFirstName(c.getOwner().getFirstName())
@@ -52,13 +60,32 @@ public class CarService {
                         .description(c.getDescription())
                         .year(c.getYear())
                         .build())
-                .toList());
+                .toList()).build();
     }
+
+    public List<Car> getPage(List<Car> list, int page, int pageSize) {
+        int fromIndex = page * pageSize;
+        if (fromIndex >= list.size()) {
+            return Collections.emptyList();
+        }
+        int toIndex = Math.min(fromIndex + pageSize, list.size());
+        return list.subList(fromIndex, toIndex);
+    }
+
+    public int getTotalPages(List<Car> list, int pageSize) {
+        int totalElements = list.size();
+        int totalPages = totalElements / pageSize;
+        if (totalElements % pageSize != 0) {
+            totalPages++;
+        }
+        return totalPages;
+    }
+
 
     public CarsResponse getAllOwnedCars(Long id) {
         List<Car> ownedCars = carRepository.findAllByOwnerId(id);
 
-        return new CarsResponse(ownedCars.stream()
+        return CarsResponse.builder().cars(ownedCars.stream()
                 .map(c -> CarsResponse.CarResponse.builder()
                         .id(c.getId())
                         .vendor(c.getVendor())
@@ -70,7 +97,7 @@ public class CarService {
                         .year(c.getYear())
                         .isDisabled(c.getIsDisabled())
                         .build())
-                .toList());
+                .toList()).build();
     }
 
     public void enableCar(Long id, Boolean enable) {
