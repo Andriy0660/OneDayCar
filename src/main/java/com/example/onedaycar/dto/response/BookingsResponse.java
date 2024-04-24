@@ -18,6 +18,7 @@ public class BookingsResponse {
     @NoArgsConstructor
     public static class BookingResponse {
         private Long id;
+        private Long userId;
         private String firstName;
         private String lastName;
         private String email;

@@ -8,10 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new BadRequestException("User not found"));
+    }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new BadRequestException("User not found"));
@@ -35,5 +42,9 @@ public class UserService {
         user.setLastName(request.getLastName());
         user.setPhone(request.getPhone());
         userRepository.save(user);
+    }
+
+    public List<User> findAllByIds(Set<Long> ids) {
+        return userRepository.findAllById(ids);
     }
 }

@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignInResponse {
     private String token;
+    private Long id;
 }

@@ -33,6 +33,7 @@ public class BookingService {
                 .stream()
                 .map(b -> BookingsResponse.BookingResponse.builder()
                         .id(b.getId())
+                        .userId(b.getOwnerId())
                         .firstName(b.getOwner().getFirstName())
                         .lastName(b.getOwner().getLastName())
                         .email(b.getOwner().getEmail())

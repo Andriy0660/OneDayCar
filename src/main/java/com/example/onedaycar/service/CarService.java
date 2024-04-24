@@ -46,9 +46,10 @@ public class CarService {
         int totalPages = getTotalPages(availableCars, r.getPageSize());
         List<Car> pagedCars = getPage(availableCars, r.getPage(), r.getPageSize());
 
-        return CarsResponse.builder().countOfPages(totalPages).cars(pagedCars.stream()
+        return CarsResponse.builder().userId(userId).countOfPages(totalPages).cars(pagedCars.stream()
                 .map(c -> CarsResponse.CarResponse.builder()
                         .id(c.getId())
+                        .ownerId(c.getOwnerId())
                         .ownerFirstName(c.getOwner().getFirstName())
                         .ownerLastName(c.getOwner().getLastName())
                         .ownerPhone(c.getOwner().getPhone())

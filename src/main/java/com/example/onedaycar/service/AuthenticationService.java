@@ -56,8 +56,7 @@ public class AuthenticationService {
         }
 
         User user = userService.findByEmail(request.getEmail());
-
         String jwtToken = jwtService.generateToken(user);
-        return new SignInResponse(jwtToken);
+        return new SignInResponse(jwtToken, user.getId());
     }
 }

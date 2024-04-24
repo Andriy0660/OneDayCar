@@ -10,6 +10,7 @@ import java.util.List;
 public class CarsResponse {
     private List<CarResponse> cars;
     private Integer countOfPages;
+    private Long userId;
 
     @Data
     @Builder
@@ -17,6 +18,7 @@ public class CarsResponse {
     @NoArgsConstructor
     public static class CarResponse {
         private Long id;
+        private Long ownerId;
         private String ownerFirstName;
         private String ownerLastName;
         private String ownerPhone;

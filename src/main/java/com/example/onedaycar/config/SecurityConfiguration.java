@@ -26,8 +26,8 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests(request -> request.requestMatchers(
-                                "/api/v1/auth/**"
-                                , "/api/v1/auth/loginbygoogle"
+                                "/api/v1/auth/**",
+                                "/ws/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(configurer ->
